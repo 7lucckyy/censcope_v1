@@ -6,7 +6,7 @@ export default function Actions() {
     const { ref } = useIntersectionObserver();
 
     return <section ref={ref} id="actions" className="flex flex-col py-10">
-        <header className="w-full flex flex-col items-center md:gap-4 font-bold">
+        <header className="w-full flex flex-col items-center md:gap-4 ">
             <h2 className="text-2xl md:text-5xl first-letter:capitalize">
                 our actions
             </h2>

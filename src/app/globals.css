@@ -2,6 +2,21 @@
 @tailwind utilities;
 @tailwind components;
 
+@font-face {
+  font-family: 'Anton';
+  src: url('../assets/fonts/Anton-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Cavet';
+  src: url('../assets/fonts/Caveat-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'TitilliumWeb';
+  src: url('../assets/fonts/TitilliumWeb-Regular.ttf') format('truetype');
+}
+
 @layer utilities {
   .hide-scrollbar {
     /* @apply scrollbar-none; */
@@ -22,6 +37,7 @@
 
   * {
     @apply m-0 p-0 box-border;
+    font-family: 'Anton', sans-serif;
 
     ::-webkit-scrollbar {
       @apply h-2 w-2 rounded-xl bg-gray-300;

@@ -4,6 +4,11 @@ export default {
   plugins: [],
   theme: {
     extend: {
+      fontFamily: {
+        'cavet': ['Cavet', 'cursive'],
+        'anton': ['Anton', 'sans-serif'],
+        'titillium': ['TitilliumWeb', 'sans-serif']
+      },
       margin: {
         'xs': '2%',
         'sm': '4%',
@@ -29,7 +34,9 @@ export default {
         '6xl': '20%'
       },
       backgroundImage: {
+        'logo': "url('/logo.svg')",
         'support': "url('/images/support.jpg')",
+        'discover': "url('/images/discover.jpg')",
         'spiral': "url('/images/spiral-pattern.png')",
         'white-paper': "url('/images/white-paper.png')",
         'newsletter': "url('/images/newsletter-bg.svg')",

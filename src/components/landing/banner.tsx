@@ -7,8 +7,8 @@ export default function Banner() {
     const { x, y } = useMousePosition();
     const { ref, entryData } = useIntersectionObserver();
 
-    const xAxis = React.useMemo(() => x - (window.innerWidth / 2), [x]);
-    const yAxis = React.useMemo(() => y - (window.innerHeight / 2), [y]);
+    const xAxis = React.useMemo(() => typeof window === "undefined" ? 0 : x - (window.innerWidth / 2), [x]);
+    const yAxis = React.useMemo(() => typeof window === "undefined" ? 0 : y - (window.innerHeight / 2), [y]);
 
     return <section ref={ref} id="banner" className={`flex relative items-center justify-center h-screen md:h-[80vh] overflow-hidden bg-black ${entryData?.isIntersecting ? 'bg-opacity-100' : 'bg-opacity-0'}`}>
         <div style={{ transform: `translateX(${-xAxis / 15}px) translateY(${-yAxis / 15}px) scale(1.1)` }} className="w-full h-full absolute bg-banner-slide-back bg-cover bg-center bg-no-repeat" />

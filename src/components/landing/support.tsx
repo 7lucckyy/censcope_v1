@@ -13,11 +13,11 @@ export default function Support() {
         id="support"
         className={`overflow-hidden flex flex-col gap-10 bg-top before:absolute before:inset-0 before:bg-support before:bg-cover before:bg-top before:bg-no-repeat before:z-0 before:duration-1000 before:transition-all ${entryData?.isIntersecting ? "before:scale-100 before:opacity-100" : "before:scale-125 before:opacity-0"}`}>
         <div className="z-10 p-xl md:p-2xl w-full">
-            <div className={`flex flex-col gap-2 duration-500 delay-150 font-bold ${entryData?.isIntersecting ? "translate-y-0" : "translate-y-20"}`}>
+            <div className={`flex flex-col gap-2 duration-500 delay-150  ${entryData?.isIntersecting ? "translate-y-0" : "translate-y-20"}`}>
                 <h2 className="text-2xl md:text-5xl first-letter:capitalize">
                     support us
                 </h2>
-                <p className="text-md md:text-xl md:w-80">
+                <p className="text-md md:text-xl md:w-80 font-titillium">
                     It is thanks to your commitment that we can carry out our humanitarian missions.
                 </p>
             </div>
