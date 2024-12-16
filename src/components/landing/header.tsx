@@ -86,7 +86,7 @@ export default function Header() {
       </nav>
 
       <Link
-        href="/donate"
+        href="/donation"
         className="flex gap-4 items-center px-8 py-2 text-white group  md:text-xl bg-cyan-600 capitalize"
       >
         donate{" "}
