@@ -1,0 +1,84 @@
+@tailwind base;
+@tailwind utilities;
+@tailwind components;
+
+@font-face {
+  font-family: "Anton";
+  src: url("../assets/fonts/Anton-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Cavet";
+  src: url("../assets/fonts/Caveat-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "TitilliumWeb";
+  src: url("../assets/fonts/TitilliumWeb-Regular.ttf") format("truetype");
+}
+
+@layer base {
+  * {
+    @apply m-0 p-0;
+    box-sizing: border-box;
+
+    ::-webkit-scrollbar {
+      @apply h-1 w-1 rounded-xl bg-gray-300;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      @apply rounded-full bg-gray-500;
+    }
+  }
+
+  body {
+    @apply w-screen h-screen overflow-hidden;
+  }
+
+  :is(#root, #portal) {
+    @apply flex w-full h-screen relative overflow-x-hidden items-center justify-center;
+  }
+
+  #root {
+    @apply grow flex-col justify-start overflow-y-auto;
+
+    section {
+      @apply w-full flex-none relative transition-all duration-500 ease-linear;
+    }
+  }
+
+  #portal {
+    @apply fixed inset-0 h-screen z-100 transition duration-500 backdrop-blur-lg bg-black/60;
+
+    &:empty {
+      @apply opacity-0 pointer-events-none;
+    }
+  }
+
+  :is(h1, h2, h3, h4, h5, h6, button) {
+    @apply font-anton;
+  }
+
+  :is(span, p) {
+    @apply font-titillium;
+  }
+
+  :is(q) {
+    @apply font-cavet;
+  }
+}
+
+@layer utilities {
+  .hide-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .scroll-margin {
+    scroll-margin-top: 12em;
+  }
+}

@@ -1,46 +1,35 @@
-import { useIntersectionObserver } from "@/hooks/observe.hook";
-import { useEffect, useMemo, useRef, useState } from "react";
+"use client";
+import React from "react";
+import useObserver from "@/hooks/observer.hook";
 
-interface SectionConfig {
-  id: string;
-  label: string;
-  component: React.ElementType;
-}
+export default function Scrollable(properties: ScrollableType) {
+  const { ref, entryData } = useObserver();
 
-export default function ScrollableSection(props: {
-  sections: SectionConfig[];
-}) {
-  const [activeSection, setActiveSection] = useState("");
-  const [scrollProgress, setScrollProgress] = useState(0);
-  const sectionRefs = useRef<{ [key: string]: IntersectionObserver }>({});
+  const [activeSection, setActiveSection] = React.useState("");
+  const [scrollProgress, setScrollProgress] = React.useState(0);
+  const sectionRefs = React.useRef<{ [key: string]: IntersectionObserver }>({});
 
-  const { ref, entryData } = useIntersectionObserver();
-
-  useEffect(() => {
+  React.useEffect(() => {
     if (entryData) {
-      const { bottom, height, top } = entryData.boundingClientRect;
-
+      const { height, top } = entryData.boundingClientRect;
       const progress = (top / height) * 100;
 
       setScrollProgress(Math.max(-progress + 10, 0));
     }
   }, [entryData]);
 
-  useEffect(() => {
-    props.sections.forEach(({ id }) => {
+  React.useEffect(() => {
+    properties.sections.forEach(({ id }) => {
       const observer = new IntersectionObserver(
         ([entry]) => {
-          const { top, height } = entry.boundingClientRect;
+          const { top } = entry.boundingClientRect;
 
           // When scrolling down, activate when element reaches top
-          if (top <= 0 && entry.isIntersecting) {
-            setActiveSection(id);
-          }
+          if (top <= 0 && entry.isIntersecting) setActiveSection(id);
 
           // When scrolling up, activate when element is 200px from top
-          if (top <= 200 && top > 0 && entry.isIntersecting) {
+          if (top <= 200 && top > 0 && entry.isIntersecting)
             setActiveSection(id);
-          }
         },
         {
           threshold: [0, 0.25, 0.5, 0.75, 1],
@@ -50,6 +39,8 @@ export default function ScrollableSection(props: {
 
       const element = document.getElementById(id);
       if (element) {
+        element.style.scrollMarginTop = "12em";
+
         observer.observe(element);
         sectionRefs.current[id] = observer;
       }
@@ -60,47 +51,39 @@ export default function ScrollableSection(props: {
         observer.disconnect()
       );
     };
-  }, [props.sections]);
+  }, [properties.sections]);
 
   return (
-    <div className="w-full flex flex-col">
-      <header
-        className={`${
-          scrollProgress > 0
-            ? "fixed top-20 lg:top-28 left-0 right-0"
-            : "relative"
-        } bg-white z-50 p-4 transition-all duration-300`}
-      >
-        <div className="hidden lg:flex gap-4 px-md items-center justify-evenly">
-          {props.sections.map(({ id, label }) => (
+    <>
+      <header className="w-full z-50 bg-white shadow-md sticky top-[5.5rem] lg:top-28">
+        <div className="hidden lg:flex gap-4 py-5 px-10% items-center justify-evenly">
+          {properties.sections.map((section) => (
             <button
-              key={id}
-              onClick={() =>
-                document
-                  .getElementById(id)
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
-              className={`px-4 py-2 rounded font-titillium ${
-                activeSection === id ? "text-cyan-600" : "text-gray-600"
+              key={section.id}
+              className={`duration-300 transition-all ${
+                activeSection === section.id ? "text-cyan-600" : "text-gray-500"
               }`}
+              onClick={() => {
+                const element = document.getElementById(section.id);
+                if (element) element.scrollIntoView({ behavior: "smooth" });
+              }}
             >
-              {label}
+              {section.label}
             </button>
           ))}
         </div>
-        <div className="h-0.5 bg-gray-200 mt-4 overflow-hidden">
-          <div
-            className="h-full bg-cyan-600 transition-all ease-linear duration-300"
-            style={{ width: `${scrollProgress}%` }}
-          />
-        </div>
+
+        <div
+          className="h-0.5 rounded-full bg-cyan-600 transition-all ease-linear duration-300"
+          style={{ width: `${scrollProgress}%` }}
+        />
       </header>
 
-      <div ref={ref} className="flex-1 overflow-y-auto">
-        {props.sections.map((section) => (
+      <div ref={ref} className="w-full flex flex-col gap-10 overflow-x-hidden">
+        {properties.sections.map((section) => (
           <section.component key={section.id} />
         ))}
       </div>
-    </div>
+    </>
   );
 }
