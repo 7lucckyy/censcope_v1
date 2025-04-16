@@ -55,8 +55,11 @@
     }
   }
 
-  :is(h1, h2, h3, h4, h5, h6, button) {
+  :is(h1, h2, h3, h4, h5, h6, button:not(.whitespace-nowrap)) {
     @apply font-anton;
+  }
+  :is(button.whitespace-nowrap) {
+    @apply font-inter;
   }
 
   :is(span, p) {

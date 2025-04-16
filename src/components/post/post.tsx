@@ -74,7 +74,7 @@ export function BlogPost({
   const handleEdit = () => router.push(`/admin/editor/${id}`);
 
   const handlePublishToggle = async () => {
-    const result = await publishPost(id);
+    const result = await publishPost(id, !published);
     if (result.success) router.refresh();
   };
 
@@ -163,7 +163,7 @@ export function BlogPost({
             </div>
 
             <Link
-              href={`/editor/${id}`}
+              href={`/admin/editor/${id}`}
               className="font-semibold text-xl md:text-2xl text-gray-900 dark:text-white mb-4"
             >
               {title}

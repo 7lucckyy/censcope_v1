@@ -6,7 +6,6 @@ import { PlusIcon } from "lucide-react";
 import { FaSpinner } from "react-icons/fa";
 
 import { createPost } from "@/lib/actions/post";
-import { cn } from "@/lib/utils";
 
 export const CreatePostButton = forwardRef<
   HTMLButtonElement,
@@ -23,11 +22,11 @@ export const CreatePostButton = forwardRef<
 
   return (
     <button
-      onClick={async () => await action()}
-      className={cn(
-        "inline-flex items-center gap-x-2 rounded-md bg-black px-3.5 py-2.5 text-sm font-medium text-white shadow-sm",
-        className
-      )}
+      onClick={async () => action()}
+      className={
+        className ??
+        "inline-flex items-center gap-x-2 rounded-md bg-black px-3.5 py-2.5 text-sm font-medium text-white shadow-sm"
+      }
       ref={ref}
       {...props}
     >

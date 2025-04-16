@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { createClient } from "../supabase/server";
-import { posts, postsToTags } from "@/db/schema";
+import { InsertPost, posts, postsToTags } from "@/db/schema";
 import { eq, like, sql } from "drizzle-orm";
 import { slugify } from "../utils";
 
@@ -87,8 +87,8 @@ export async function updatePost(formData: FormData) {
       .map((tag) => (typeof tag === "string" ? tag : "")) // Handle potential File entries if needed, though unlikely for hidden inputs
       .filter((tag) => tag !== "");
 
-    if (!title || !content) {
-      return { message: "Title, content and postId are required." };
+    if (!content) {
+      return { message: "Content is required." };
     }
     const supabase = await createClient();
     const {
@@ -106,13 +106,16 @@ export async function updatePost(formData: FormData) {
 
       // 1. Create or Update the Post
       if (currentPostId) {
+        const dataToUpdate: Partial<InsertPost> = { content };
+        console.log(title);
+        if (typeof title === "string") {
+          dataToUpdate.title = title;
+          dataToUpdate.slug = slugify(title);
+        }
+
         const post = await tx
           .update(posts)
-          .set({
-            title,
-            content,
-            slug: slugify(title),
-          })
+          .set(dataToUpdate)
           .where(eq(posts.id, currentPostId))
           .returning({ slug: posts.slug });
 
@@ -150,7 +153,6 @@ export async function updatePost(formData: FormData) {
         await tx.insert(postsToTags).values(newPostsToTags);
       }
 
-      // Transaction successful, return the post ID
       return { postId: currentPostId, slug: currentPostSlug };
     });
 
@@ -162,7 +164,7 @@ export async function updatePost(formData: FormData) {
     return {
       success: true,
       postId: result.postId,
-      message: "Post updated successfully!",
+      message: `Post ${postId ? "updated" : "created"} successfully!`,
     };
   } catch (error) {
     console.error({ error });
@@ -171,15 +173,16 @@ export async function updatePost(formData: FormData) {
   }
 }
 
-export async function publishPost(postId: string) {
+export async function publishPost(postId: string, state: boolean) {
   try {
     await db
       .update(posts)
       .set({
-        published: true,
+        published: state,
       })
       .where(eq(posts.id, postId))
       .returning({ slug: posts.slug });
+    revalidatePath(".");
     return { success: true };
   } catch (error) {
     console.error("Failed to publish post:", error);

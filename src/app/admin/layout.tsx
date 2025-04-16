@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
+import { Toaster } from 'sonner';
 
-import { Header } from "@/components/header";
 import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = {
@@ -19,11 +19,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className={cn(fontSans.variable, fontSans.className, "isolate")}>
-      <div className="max-w-screen overflow-x-hidden">
-        <Header />
-        {children}
-      </div>
+    <div className={cn(fontSans.variable, fontSans.className)}>
+          <Toaster />
+          {children}
     </div>
   );
 }

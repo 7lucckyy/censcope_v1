@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { Loader2, Save } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Separator } from "@/components/ui/separator";
 import { ImageExtension } from "@/components/editor/extensions/image";
@@ -33,6 +35,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import StarterKit from "@tiptap/starter-kit";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {toast} from "sonner"
 
 import { BorderTrail } from "@/components/motion-primitives/border-trail";
 import { Button } from "@/components/ui/button";
@@ -105,14 +108,25 @@ const extensions = [
   SearchAndReplace,
 ];
 
-interface TiptapEditorProps {
-  id: string | undefined;
-  title: string | undefined;
-  content: string | null | undefined;
-  tags: SelectTag[];
+interface PostAttributes {
+    id: string;
+    title: string;
+    slug: string;
+    content: string | null;
+    tags: {
+        tag: {
+            name: string;
+            id: string;
+        };
+    }[];
 }
 
-function TiptapEditor({ title, content, id, tags }: TiptapEditorProps) {
+interface TiptapEditorProps extends PostAttributes {
+  allTags: SelectTag[];
+}
+
+function TiptapEditor({ title, content, id, tags, allTags }: TiptapEditorProps) {
+  const [pending, setPending] = useState(false)
   const editor = useEditor({
     extensions: extensions as Extension[],
     content,
@@ -128,14 +142,16 @@ function TiptapEditor({ title, content, id, tags }: TiptapEditorProps) {
   }
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
+    setPending(true)
     const formdata = new FormData();
-    formdata.set("title", values.title);
+    // If title is different from current, this is to prevent unique_constraint when deriving slug due to same title
+    if(values.title!==title) formdata.set("title", values.title);
     if (values.tags)
       values.tags.forEach((tag) => {
         formdata.append("tags", tag);
       });
     formdata.set("content", editor.getHTML());
-    formdata.set("id", id!);
+    formdata.set("postId", id!);
 
     const data = {
       title: values.title,
@@ -144,7 +160,10 @@ function TiptapEditor({ title, content, id, tags }: TiptapEditorProps) {
     };
     console.log(data);
     const res = await updatePost(formdata);
+    toast(res.message)
     console.log(res);
+    setPending(false)
+
   };
 
   return (
@@ -157,7 +176,9 @@ function TiptapEditor({ title, content, id, tags }: TiptapEditorProps) {
           <BorderTrail />
           <div className="flex w-full items-center py-2 px-2 justify-between border-b bg-background">
             <SidebarTrigger />
-            <Button type="submit">Save</Button>
+            <Button type="submit" disabled={pending}>{pending ?
+              <Loader2 className="mr-2 size-4 animate-spin"/>
+            : <Save className="size-4"/>}Save</Button>
           </div>
         </header>
 
@@ -187,10 +208,10 @@ function TiptapEditor({ title, content, id, tags }: TiptapEditorProps) {
               <FormLabel>Blog Post Tags</FormLabel>
               <FormControl>
                 <TagInput
-                  availableTags={tags}
+                  availableTags={allTags}
                   onChange={field.onChange}
                   placeholder="Add or create tags..."
-                  // initialSelectedTags={tags}
+                  initialSelectedTags={tags.map(t=>t.tag)}
                   maxTags={5}
                 />
               </FormControl>
@@ -227,7 +248,7 @@ function TiptapEditor({ title, content, id, tags }: TiptapEditorProps) {
             </ToolbarProvider>
           </div>
           <EditorContent
-            className="outline-none [&>.tiptap.ProseMirror]:px-10 [&>.tiptap.ProseMirror]:py-5 -z-10"
+            className="outline-none [&>.tiptap.ProseMirror]:px-10 [&>.tiptap.ProseMirror]:py-5 -z-10 !font-[var(--font-sans)]"
             editor={editor}
           />
         </div>

@@ -1,33 +1,57 @@
 import { cache } from "react";
 import type { Metadata } from "next";
-import { eq } from "drizzle-orm";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import TiptapEditor from "@/components/editor";
 import { db } from "@/db";
-import { posts, tags as tagsTable, postsToTags } from "@/db/schema";
+import { tags as tagsTable, } from "@/db/schema";
 
 export const metadata: Metadata = {
   title: "Censope Blog Post Editor",
 };
 
 const getData = cache(async (slug: string) => {
-  const result = await db
-    .select({
-      id: posts.id,
-      title: posts.title,
-      slug: posts.slug,
-      content: posts.content,
-      tags: postsToTags.tagId,
-    })
-    .from(posts)
-    .leftJoin(postsToTags, eq(posts.id, postsToTags.postId))
-    .where(eq(posts.id, slug));
+  const postsWithTags = await db.query.posts.findFirst({
+    where: (posts, { eq }) => eq(posts.id, slug),
+    orderBy: (posts, { desc }) => [desc(posts.updatedAt)],
+    columns: {
+      id:true,
+      content:true,
+      slug: true,
+      title:true
+    },
+    with: {
+      tags: {
+        columns: {}, // Don't need columns from postsToTags itself
+        with: {
+          tag: {
+            // Target the relation in postsToTags schema
+            columns: {
+              // Select desired columns from the tags table
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  // const result = await db
+  //   .select({
+  //     id: posts.id,
+  //     title: posts.title,
+  //     slug: posts.slug,
+  //     content: posts.content,
+  //     tags: postsToTags.tagId,
+  //   })
+  //   .from(posts)
+  //   .leftJoin(postsToTags, eq(posts.id, postsToTags.postId))
+  //   .where(eq(posts.id, slug));
 
   const tags = await db.select().from(tagsTable);
 
-  console.log({ post: result.at(0), tags });
-  return { post: result.at(0), tags };
+  return { post: postsWithTags, tags };
 });
 
 async function PostsPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -41,7 +65,7 @@ async function PostsPage({ params }: { params: Promise<{ slug: string }> }) {
 
   return (
     <TooltipProvider>
-      <TiptapEditor {...post} tags={tags} />
+      <TiptapEditor {...post} allTags={tags} />
     </TooltipProvider>
   );
 }

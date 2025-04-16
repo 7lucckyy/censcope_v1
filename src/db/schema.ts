@@ -36,6 +36,14 @@ export const posts = pgTable("post", {
   ...timestamps,
 });
 
+export const images = pgTable("image", {
+  id: text("cuid")
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  title: text("title").notNull(),
+  url: text("url").notNull(),
+});
+
 export const postsRelations = relations(posts, ({ one, many }) => ({
   author: one(users, {
     fields: [posts.authorId],

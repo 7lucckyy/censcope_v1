@@ -23,6 +23,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { createTag } from "@/lib/actions/tag";
 import { SelectTag } from "@/db/schema";
+import { toast } from "sonner";
 
 interface TagInputProps {
   availableTags: SelectTag[];
@@ -61,8 +62,29 @@ export function TagInput({
     [maxTags, selectedTags.length, onChange]
   );
 
+  React.useEffect(() => {
+    onChange(selectedTags.map(tag=>tag.id))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[selectedTags])
+
+   React.useEffect(() => {
+    // Only update selectedTags if the new initialSelectedTags is different
+    // This prevents a loop caused by the onChange callback potentially updating the parent state
+    if (
+      initialSelectedTags &&
+      selectedTags &&
+      (initialSelectedTags.length !== selectedTags.length ||
+        !initialSelectedTags.every((tag, index) => selectedTags[index]?.id === tag.id))
+    ) {
+      setSelectedTags(initialSelectedTags);
+    }
+  }, [initialSelectedTags, selectedTags]);
+
+
   const handleRemoveTag = React.useCallback((tagToRemove: SelectTag) => {
-    setSelectedTags((prev) => prev.filter((tag) => tag.id !== tagToRemove.id));
+    setSelectedTags((prev) => {
+      return prev.filter((tag) => tag.id !== tagToRemove.id)
+    });
   }, []);
 
   const handleCreateTag = React.useCallback(async () => {
@@ -76,19 +98,23 @@ export function TagInput({
       setInputValue("");
       return;
     }
-
     setIsCreating(true);
-    const newTag = await createTag(inputValue.trim());
-    setIsCreating(false);
 
-    if (newTag) {
-      if (!selectedTags.some((t) => t.id === newTag.id)) {
-        handleSelectTag(newTag);
+    try {
+      const newTag = await createTag(inputValue.trim());
+      if (newTag) {
+        if (!selectedTags.some((t) => t.id === newTag.id)) {
+          handleSelectTag(newTag);
+        }
+        // Optionally add to availableTags state locally if not handled by external state update
+        // setAvailableTags(prev => [...prev, newTag]);
       }
-      // Optionally add to availableTags state locally if not handled by external state update
-      // setAvailableTags(prev => [...prev, newTag]);
+      setInputValue("");
+      toast.error("Tag created");
+    } catch {
+      toast.error("Failed to create tag");
     }
-    setInputValue("");
+    setIsCreating(false);
   }, [inputValue, isCreating, availableTags, handleSelectTag, selectedTags]);
 
   // Filter available tags based on input and exclude already selected ones
@@ -151,8 +177,12 @@ export function TagInput({
           selectedTags.length === 0 && "hidden"
         )}
       >
-        {selectedTags.map((tag) => (
-          <Badge key={tag.id} variant="secondary" className="group gap-1 pr-1">
+        {initialSelectedTags.map((tag) => (
+          <Badge
+            key={tag.id}
+            variant="secondary"
+            className="group gap-1 pr-1 !font-inter capitalize"
+          >
             {tag.name}
             <button
               aria-label={`Remove ${tag.name}`}
@@ -229,7 +259,7 @@ export function TagInput({
                         key={tag.id}
                         value={tag.name}
                         onSelect={() => handleSelectTag(tag)}
-                        className="cursor-pointer"
+                        className="cursor-pointer capitalize"
                       >
                         <Check
                           className={cn(
