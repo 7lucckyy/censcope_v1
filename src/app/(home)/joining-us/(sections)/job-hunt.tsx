@@ -1,8 +1,6 @@
 "use client";
 
 import Button from "@/components/primary/button";
-import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
 
 export default function JobHunt() {
   return (

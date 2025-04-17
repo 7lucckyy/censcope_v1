@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaArrowRight } from "react-icons/fa";
+
 import SubscribeForm from "@/components/forms/subscribe";
 import Button from "@/components/primary/button";
 

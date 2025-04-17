@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { spiralImg } from "@/constants/media";
 
 export default function Hero(properties: HeroProps) {
   const links = [{ label: "home", href: "#" }];

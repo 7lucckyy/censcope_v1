@@ -14,7 +14,7 @@ export default function About() {
 
           <p className="text-sm text-justify">
             Your donations are the guarantee of Première Urgence
-            Internationale's freedom to act. For 40 years, we have been
+            Internationale&apos;s freedom to act. For 40 years, we have been
             providing assistance to vulnerable, marginalized, or excluded
             populations in France and internationally, affected by the impacts
             of wars, natural disasters, or economic collapse.
@@ -23,8 +23,8 @@ export default function About() {
           <p className="text-sm text-justify">
             The support you provide us enables us to have a positive impact on
             the lives of 6 million people each year in crisis zones, including
-            "forgotten" crises that receive little attention from the media or
-            institutional donors.
+            &ldquo;forgotten&rdquo; crises that receive little attention from
+            the media or institutional donors.
           </p>
 
           <p className="text-sm text-justify">
@@ -45,14 +45,14 @@ export default function About() {
             94% of our funds are directly used for our social missions, and the
             remaining 6% is allocated for overhead expenses. Each year, our
             organization undergoes an audit conducted by the SGS ICS firm, which
-            attests to the rigor and transparency of our association's
+            attests to the rigor and transparency of our association&apos;s
             operations and management. You can access our annual accounts here.
           </p>
 
           <p className="text-sm text-justify">
-            We have been awarded the "DO GOOD" label by GANDEE (2 stars) as a
-            result of an audit conducted in 2021. You can consult the rating
-            criteria of this label here.
+            We have been awarded the &ldquo;DO GOOD&rdquo; label by GANDEE (2
+            stars) as a result of an audit conducted in 2021. You can consult
+            the rating criteria of this label here.
           </p>
 
           <Image
@@ -114,10 +114,10 @@ export default function About() {
           </p>
 
           <p className="text-sm text-justify">
-            In accordance with the "Information Technology and Liberties" law
-            and European regulations, you have the right to object to the use of
-            your personal data. You also have the right to access, rectify,
-            limit, transfer, or delete your data.
+            In accordance with the &ldquo;Information Technology and
+            Liberties&rdquo; law and European regulations, you have the right to
+            object to the use of your personal data. You also have the right to
+            access, rectify, limit, transfer, or delete your data.
           </p>
         </article>
 

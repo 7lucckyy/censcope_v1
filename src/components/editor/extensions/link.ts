@@ -1,5 +1,5 @@
 import { Link as TiptapLink, LinkOptions } from "@tiptap/extension-link";
-import { getMarkRange, Node } from "@tiptap/core";
+import { getMarkRange } from "@tiptap/core";
 import {
   EditorState,
   Plugin,
@@ -7,13 +7,16 @@ import {
   TextSelection,
   Transaction,
 } from "@tiptap/pm/state";
+import { Mark } from "@tiptap/pm/model";
+
+type Attrs = { text: string; href: string };
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     customLink: {
-      insertLink: (attrs: any) => ReturnType;
+      insertLink: (attrs: Attrs) => ReturnType;
       startEditLink: () => ReturnType;
-      confirmEditLink: (attrs?: { text?: string; href?: string }) => ReturnType;
+      confirmEditLink: (attrs?: Attrs) => ReturnType;
     };
   }
 }
@@ -62,9 +65,9 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
                   return chain()
                     .blur()
                     .focus(tr.selection.anchor)
-                    .insertLink({ text: "\u200B" })
+                    .insertLink({ text: "\u200B", href: "#" })
                     .run();
-                // @ts-ignore
+                // @ts-expect-error - setLink expects additional parameters but empty href is valid here
                 return chain().setLink({ href: "" }).run();
               })
               .setMeta("addToHistory", false)
@@ -110,7 +113,7 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
 
           chain()
             .command(({ tr, commands }) => {
-              if (shouldUpdate) return commands.insertLink(updated);
+              if (shouldUpdate) return commands.insertLink(updated!);
               clearTempLinks(tr, doc, this.storage.tempPos);
               return true;
             })
@@ -200,14 +203,14 @@ function clearTempLinks(
   doc: EditorState["doc"],
   selection: Selection | null
 ) {
-  const { from, to, empty } = selection;
+  const { from, to, empty } = selection!;
   if (empty) {
     tr.removeMark(from, from + 1);
     tr.insertText("", from, from + 1);
   } else {
     doc.nodesBetween(from, to, (node, pos: number) => {
       const linkMark = node.marks.find(
-        (mark: any) => mark.type.name === "link" && !mark.attrs.href
+        (mark: Mark) => mark.type.name === "link" && !mark.attrs.href
       );
 
       if (linkMark) {

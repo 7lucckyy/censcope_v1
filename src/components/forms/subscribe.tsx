@@ -60,8 +60,13 @@ export default function SubscribeForm() {
             onChange={(ev) => setData({ ...data, confirm: ev.target.checked })}
           />
           <span>
-            * you confirm that you've read our{" "}
-            <a href="#" target="_blank" rel="noopener noreferrer" className="underline">
+            * you confirm that you&apos;ve read our{" "}
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
               privacy policy
             </a>
           </span>

@@ -15,7 +15,6 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { useToolbar } from "@/components/editor/toolbars/toolbar-provider";
 import { useEditorState } from "@tiptap/react";
 import { Level } from "@tiptap/extension-heading";
@@ -25,7 +24,7 @@ const HEADING_LEVELS = [1, 2, 3, 4, 5, 6] as const;
 type Heading = "p" | `h${(typeof HEADING_LEVELS)[number]}`;
 
 const HeadingToolbar = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, onClick, children, ...props }, ref) => {
+  ({}) => {
     const { editor } = useToolbar();
 
     const current = useEditorState({

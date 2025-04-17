@@ -90,15 +90,15 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
 });
 
 function ImagePlaceholderComponent(props: NodeViewProps) {
-  const { editor, extension, selected, node } = props;
+  const { editor, extension, selected } = props;
 
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
   const [urlError, setUrlError] = useState(false);
 
   const [images, setImages] = useState<SelectImage[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [, setLoading] = useState(true);
+  const [, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchImages() {
@@ -107,8 +107,8 @@ function ImagePlaceholderComponent(props: NodeViewProps) {
         if (!response.ok) {
           throw new Error("Failed to fetch images");
         }
-		  const data = await response.json();
-		  console.log(data)
+        const data = await response.json();
+        console.log(data);
         setImages(data);
       } catch (err: unknown) {
         setError(err.message || "An unexpected error occurred");

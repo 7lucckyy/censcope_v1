@@ -65,7 +65,6 @@ export function BlogFilters({ tags, authors }: BlogFiltersProps) {
       !!filtersQ.from ||
       !!filtersQ.q;
     setIsFiltered(active);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filtersQ]);
 
   const handleAuthorChange = (authorId: string) => {

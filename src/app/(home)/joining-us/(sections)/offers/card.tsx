@@ -1,10 +1,7 @@
 import Link from "next/link";
-import Image from "next/image";
 import { FaArrowRight } from "react-icons/fa";
 
 export default function OfferCard() {
-  const title = "A poor family living in a dirty, rundown neighborhood";
-
   return (
     <Link
       href={`/newline/100`}

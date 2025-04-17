@@ -26,21 +26,24 @@ export const LinkMenu = () => {
     },
   });
 
-  const shouldShow = useCallback(({ editor, from, to }: any) => {
-    setIsEditing(mode.current == -1);
-    return editor.isActive("link") && (mode.current == -1 || from !== to);
-  }, []);
+  // const shouldShow = useCallback(({ editor, from, to }: any) => {
+  //   setIsEditing(mode.current == -1);
+  //   return editor.isActive("link") && (mode.current == -1 || from !== to);
+  // }, []);
 
-  const applyLink = useCallback((url: string, text?: string) => {
-    editor
-      .chain()
-      .confirmEditLink({
-        href: url,
-        text: text || url,
-      })
-      .run();
-    setIsEditing(false);
-  }, []);
+  const applyLink = useCallback(
+    (url: string, text?: string) => {
+      editor
+        .chain()
+        .confirmEditLink({
+          href: url,
+          text: text || url,
+        })
+        .run();
+      setIsEditing(false);
+    },
+    [editor]
+  );
 
   const removeLink = useCallback(() => {
     editor.chain().focus().unsetLink().run();

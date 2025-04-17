@@ -2,9 +2,10 @@
 
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
+import { Info } from "lucide-react";
 
 import { authenticate } from "@/lib/actions/auth";
-import { Info } from "lucide-react";
 
 export default function LoginPage() {
   const searchParams = useSearchParams();
@@ -18,13 +19,10 @@ export default function LoginPage() {
     <div className="flex flex-wrap w-full">
       <div className="flex w-full flex-col md:w-1/2">
         <div className="flex justify-center pt-12 md:-mb-24 md:justify-start md:pl-12">
-          <a
-            href="#"
-            className="border-b-gray-700 border-b-4 pb-2 text-2xl font-bold text-gray-900"
-          >
+          <div className="border-b-gray-700 border-b-4 pb-2 text-2xl font-bold text-gray-900">
             {" "}
-            Censope .{" "}
-          </a>
+            Censcope .{" "}
+          </div>
         </div>
         <div className="lg:w-[28rem] mx-auto my-auto flex flex-col justify-center pt-8 md:justify-start md:px-6 md:pt-0">
           <p className="text-left text-3xl font-bold">Welcome back</p>
@@ -99,7 +97,12 @@ export default function LoginPage() {
           <p className="">Founder, Emogue</p>
           <p className="mb-7 text-sm opacity-70">Web Design Agency</p>
         </div>
-        <img
+        <Image
+          width={720}
+          height={880}
+          alt="We work 10x faster than our compeititors and stay consistant. While
+            they're bogged won with techincal debt, we're realeasing
+            new features."
           className="-z-1 absolute top-0 h-full w-full object-cover opacity-90"
           src="https://images.unsplash.com/photo-1565301660306-29e08751cc53?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80"
         />

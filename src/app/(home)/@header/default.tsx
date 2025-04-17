@@ -16,7 +16,7 @@ export default function Header() {
 
   React.useEffect(() => {
     if (open) setOpen(false);
-  }, [top]);
+  }, [top, open]);
 
   const isOpague = React.useMemo(() => {
     return pathname !== "/" || top > 20;
