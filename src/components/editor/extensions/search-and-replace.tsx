@@ -177,7 +177,7 @@ const replaceAll = (
     }
   }
 
-  dispatch(tr);
+  dispatch!(tr);
 };
 
 const selectNext = (editor: CoreEditor) => {

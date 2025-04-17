@@ -1,4 +1,4 @@
-import type { NextAuthConfig } from "next-auth/react";
+import type { NextAuthConfig } from "next-auth";
 
 import { createClient } from "@/lib/supabase/server";
 
@@ -43,10 +43,13 @@ export const authConfig = {
         timestamp: new Date().toISOString(),
       });
     },
-    async signOut({ token }) {
-      const supabase = await createClient();
-      if (token?.userId) {
-        await supabase.auth.signOut();
+    async signOut(message) {
+      if ("session" in message) {
+        if (message.session?.userId) {
+          console.log("[AUTH] Signing out...");
+          const supabase = await createClient();
+          await supabase.auth.signOut();
+        }
       }
     },
   },

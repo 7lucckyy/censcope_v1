@@ -175,15 +175,15 @@ export async function updatePost(formData: FormData) {
 
 export async function publishPost(postId: string, state: boolean) {
   try {
-    await db
+    const result = await db
       .update(posts)
       .set({
         published: state,
       })
       .where(eq(posts.id, postId))
-      .returning({ slug: posts.slug });
-    revalidatePath(".");
-    return { success: true };
+      .returning({ slug: posts.slug, published: posts.published });
+    // revalidatePath(".");
+    return { success: true, published: result.at(0)?.published };
   } catch (error) {
     console.error("Failed to publish post:", error);
     return { success: false, error: "Failed to publish post." };

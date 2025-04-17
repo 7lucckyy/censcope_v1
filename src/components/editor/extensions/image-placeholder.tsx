@@ -110,8 +110,10 @@ function ImagePlaceholderComponent(props: NodeViewProps) {
         const data = await response.json();
         console.log(data);
         setImages(data);
-      } catch (err: unknown) {
-        setError(err.message || "An unexpected error occurred");
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unexpected error occurred"
+        );
       } finally {
         setLoading(false);
       }

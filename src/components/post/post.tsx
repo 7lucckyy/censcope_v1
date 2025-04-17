@@ -57,6 +57,8 @@ export function BlogPost({
   tags,
 }: BlogPostProps) {
   const [open, setOpen] = useState(false);
+  const [isPublished, setIsPublished] = useState(published);
+  const [isPublishing, setIsPublishing] = useState(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -74,8 +76,10 @@ export function BlogPost({
   const handleEdit = () => router.push(`/admin/editor/${id}`);
 
   const handlePublishToggle = async () => {
+    setIsPublishing(true);
     const result = await publishPost(id, !published);
-    if (result.success) router.refresh();
+    if (result.published) setIsPublished(result.published);
+    setIsPublishing(true);
   };
 
   return (
@@ -93,11 +97,14 @@ export function BlogPost({
           <div className="flex flex-wrap gap-2 justify-start mb-6">
             {" "}
             <Button
-              variant={published ? "outline" : "default"}
+              variant={isPublished ? "outline" : "default"}
               size="sm"
               onClick={handlePublishToggle}
+              disabled={isPublishing}
             >
-              {published ? (
+              {isPublishing ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : isPublished ? (
                 <>
                   {" "}
                   <EyeOff className="mr-1.5 h-4 w-4" /> Unpublish{" "}
@@ -172,7 +179,11 @@ export function BlogPost({
             {tags && tags.length > 0 && (
               <div className="flex flex-wrap items-center gap-2 mb-6">
                 {tags.map((tag) => (
-                  <Badge key={tag.id} variant="secondary" className="capitalize">
+                  <Badge
+                    key={tag.id}
+                    variant="secondary"
+                    className="capitalize"
+                  >
                     {tag.name}
                   </Badge>
                 ))}

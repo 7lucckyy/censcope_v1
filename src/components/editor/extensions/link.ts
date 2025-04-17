@@ -67,7 +67,6 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
                     .focus(tr.selection.anchor)
                     .insertLink({ text: "\u200B", href: "#" })
                     .run();
-                // @ts-expect-error - setLink expects additional parameters but empty href is valid here
                 return chain().setLink({ href: "" }).run();
               })
               .setMeta("addToHistory", false)
