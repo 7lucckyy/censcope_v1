@@ -1,23 +1,17 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 import { db } from "@/db";
 import { images } from "@/db/schema";
-import { revalidatePath } from "next/cache";
-import { createClient, createSupabaseAdmin } from "../supabase/server";
-
-const BASE_FOLDERNAME = "gallery";
-const BUCKET_NAME = process.env.SUPABASE_BUCKET_NAME;
+import { deleteFromCloudinary, uploadToCloudinary } from "../cloudinary";
+import { fileToURI } from "@/lib/utils";
+import { auth } from "../auth";
 
 export async function deleteGallery(galleryId: string) {
   return db.transaction(async (tx) => {
     try {
-      if (!BUCKET_NAME) {
-        throw new Error("Supabase URL or bucket name is not defined");
-      }
-      const supabase = await createSupabaseAdmin();
-
       const galleryItem = await tx.query.images.findFirst({
         where: eq(images.id, galleryId),
       });
@@ -26,14 +20,7 @@ export async function deleteGallery(galleryId: string) {
         return { error: "Gallery item not found." };
       }
 
-      const { error: storageError } = await supabase.storage
-        .from(BUCKET_NAME)
-        .remove([galleryItem?.url]);
-
-      if (storageError) {
-        console.error(storageError);
-        return { error: "Failed to delete image from storage." };
-      }
+      await deleteFromCloudinary(galleryItem?.url);
 
       await tx.delete(images).where(eq(images.id, galleryId));
 
@@ -47,40 +34,31 @@ export async function deleteGallery(galleryId: string) {
   });
 }
 
-export async function uploadImage(formData: FormData) {
-  const results: {
-    filename: string;
-    success: boolean;
-    error?: string;
-    path?: string;
-  }[] = []; // To store the outcome of each file upload
+type Result = {
+  filename: string;
+  success: boolean;
+  error?: string;
+  path?: string;
+};
+
+export async function uploadImages(formData: FormData) {
+  const results = [] as Result[]; // To store the outcome of each file upload
   let hasErrors = false;
 
   try {
-    if (!BUCKET_NAME) {
-      throw new Error("Supabase bucket name is not defined");
-    }
+    const session = await auth();
 
-    const supabase = await createClient();
-
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-
-    if (userError || !user) {
-      console.error("Supabase getUser error:", userError);
+    if (!session || !session.user) {
+      console.error("Could not authenticate user for upload.");
       return { error: "Could not authenticate user for upload.", results };
     }
 
-    // --- Handle Multiple Files ---
-    const files = formData.getAll("files") as File[]; // Use getAll() and match the input field name "files"
+    const files = formData.getAll("files") as File[];
 
     if (!files || files.length === 0) {
       return { error: "No files provided.", results };
     }
 
-    // --- Loop through each file ---
     for (const file of files) {
       if (!file || typeof file.name !== "string" || file.size === 0) {
         console.warn("Skipping invalid file entry:", file);
@@ -95,26 +73,19 @@ export async function uploadImage(formData: FormData) {
 
       const originalFilename = file.name;
       try {
-        const extension = originalFilename.split(".").pop();
         const filenameWithoutExt = originalFilename.replace(/\.[^/.]+$/, "");
-        // Construct the path according to RLS policies
-        const uniqueFilename = `${BASE_FOLDERNAME}/${
-          user.id
-        }/${filenameWithoutExt}-${crypto.randomUUID()}.${extension}`;
 
-        const { data: imageData, error: imageError } = await supabase.storage
-          .from(BUCKET_NAME)
-          .upload(uniqueFilename, file, {
-            cacheControl: "3600",
-            upsert: false,
-          });
+        const fileURI = await fileToURI(file);
+        const result = await uploadToCloudinary(fileURI, "gallery");
 
-        if (imageError) {
-          console.error(`Error uploading ${originalFilename}:`, imageError);
+        const imageUrl: string = (result as { secure_url: string }).secure_url;
+
+        if (!imageUrl) {
+          console.error(`Error uploading ${originalFilename}`);
           results.push({
             filename: originalFilename,
             success: false,
-            error: imageError.message,
+            error: "Eloudinary error",
           });
           hasErrors = true;
           continue;
@@ -122,13 +93,13 @@ export async function uploadImage(formData: FormData) {
 
         await db.insert(images).values({
           title: filenameWithoutExt,
-          url: imageData.path,
+          url: imageUrl,
         });
 
         results.push({
           filename: originalFilename,
           success: true,
-          path: imageData.path,
+          path: imageUrl,
         });
       } catch (uploadError) {
         let errorMessage = "Processing failed";

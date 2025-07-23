@@ -1,6 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 
-import { createClient } from "@/lib/supabase/server";
+import { signOut } from "@/lib/auth";
 
 export const authConfig = {
   pages: {
@@ -47,8 +47,8 @@ export const authConfig = {
       if ("session" in message) {
         if (message.session?.userId) {
           console.log("[AUTH] Signing out...");
-          const supabase = await createClient();
-          await supabase.auth.signOut();
+          signOut()
+         
         }
       }
     },

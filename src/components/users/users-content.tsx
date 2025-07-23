@@ -32,12 +32,13 @@ function UsersContent({ users }: { users: SelectUser[] }) {
       try {
         const result = await deleteUser(userId);
 
-        if (result.success) {
+        if (result.status === "success") {
           setSelectedUser(null);
-          toast.info(result.message);
+          toast.info("Success");
           setOpen(false);
         }
-        if (!result.success) toast.error(result.message);
+        if (result.status === "error")
+          toast.error("An unexpected error occurred:");
       } catch (error) {
         console.error("An unexpected error occurred:", error);
       }

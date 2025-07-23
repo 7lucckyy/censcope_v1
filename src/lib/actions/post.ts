@@ -5,9 +5,9 @@ import { createId } from "@paralleldrive/cuid2";
 import { eq, like, sql } from "drizzle-orm";
 
 import { db } from "@/db";
-import { createClient } from "../supabase/server";
 import { InsertPost, posts, postsToTags } from "@/db/schema";
 import { slugify } from "../utils";
+import { auth } from "../auth";
 
 export async function createPost() {
   try {
@@ -25,21 +25,17 @@ export async function createPost() {
     // 3. Generate the slug
     const slug = `${slugify(title)}-${createId()}`;
 
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
+    const session = await auth();
 
-    if (error || !user) {
-      return { message: "Supabase getUser error." };
+    if (!session || !session.user) {
+      return { message: "Could not authenticate user. Please sign in." };
     }
 
     const newPost = await db
       .insert(posts)
       .values({
         title,
-        authorId: user.id,
+        authorId: session.user.id,
         slug,
       })
       .returning();
@@ -71,14 +67,10 @@ export async function updatePost(formData: FormData) {
     if (!content) {
       return { message: "Content is required." };
     }
-    const supabase = await createClient();
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser();
+    const session = await auth();
 
-    if (error || !user) {
-      return { message: "Supabase getUser error." };
+    if (!session || !session.user) {
+      return { message: "Could not authenticate user. Please sign in." };
     }
 
     const result = await db.transaction(async (tx) => {
@@ -108,7 +100,7 @@ export async function updatePost(formData: FormData) {
             title,
             content,
             slug: slugify(title),
-            authorId: user.id,
+            authorId: session.user.id,
           })
           .returning({ newId: posts.id, slug: posts.slug });
 

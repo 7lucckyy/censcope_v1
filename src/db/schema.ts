@@ -1,15 +1,15 @@
 import {
-  pgTable,
+  mysqlTable,
   text,
   primaryKey,
   varchar,
   boolean,
-} from "drizzle-orm/pg-core";
+} from "drizzle-orm/mysql-core";
 import { relations } from "drizzle-orm";
 import { createId } from "@paralleldrive/cuid2";
 import { timestamps } from "./columns.helpers";
 
-export const users = pgTable("users", {
+export const users = mysqlTable("users", {
   id: text("cuid").primaryKey(),
   email: text("email").notNull().unique(),
   avatar: text("avatars"),
@@ -21,7 +21,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   posts: many(posts),
 }));
 
-export const posts = pgTable("post", {
+export const posts = mysqlTable("post", {
   id: text("cuid")
     .primaryKey()
     .$defaultFn(() => createId()),
@@ -29,17 +29,19 @@ export const posts = pgTable("post", {
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   content: text("content"),
   published: boolean("published").default(false).notNull(),
-  authorId: varchar("author_id", { length: 255 })
-    .references(() => users.id, { onDelete: "set null" }),
+  authorId: varchar("author_id", { length: 255 }).references(() => users.id, {
+    onDelete: "set null",
+  }),
   ...timestamps,
 });
 
-export const images = pgTable("images", {
+export const images = mysqlTable("images", {
   id: text("cuid")
     .primaryKey()
     .$defaultFn(() => createId()),
   title: text("title").notNull(),
   url: text("url").notNull(),
+  publicId: text("public_id").notNull(),
 });
 
 export const postsRelations = relations(posts, ({ one, many }) => ({
@@ -50,7 +52,7 @@ export const postsRelations = relations(posts, ({ one, many }) => ({
   tags: many(postsToTags),
 }));
 
-export const tags = pgTable("tag", {
+export const tags = mysqlTable("tag", {
   id: text("cuid")
     .primaryKey()
     .$defaultFn(() => createId()),
@@ -61,7 +63,7 @@ export const tagsRelations = relations(tags, ({ many }) => ({
   posts: many(postsToTags),
 }));
 
-export const postsToTags = pgTable(
+export const postsToTags = mysqlTable(
   "posts_to_tags",
   {
     postId: text("post_id")

@@ -163,3 +163,12 @@ export function getSupabaseImagePath(partialPath: string) {
   }
   return `${SUPABASE_URL}/storage/v1/object/public/${BUCKET_NAME}/${partialPath}`;
 }
+
+export async function fileToURI(file: File) {
+  const fileBuffer = await file.arrayBuffer();
+  const mime = file.type;
+  const encoding = "base64";
+  const base64Data = Buffer.from(fileBuffer).toString("base64");
+  const fileUri = "data:" + mime + ";" + encoding + "," + base64Data;
+  return fileUri;
+}
