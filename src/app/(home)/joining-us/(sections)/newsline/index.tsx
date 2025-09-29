@@ -5,7 +5,7 @@ import { posts as postsTable } from "@/db/schema";
 import { NewsCard } from "@/components/post/card";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0; // 0 for no cache, 60 for 1 minute cache
+export const fetchCache = "force-no-store"; // alternative to revalidate = 0
 
 export async function Newsline() {
   const posts = await db.query.posts.findMany({
