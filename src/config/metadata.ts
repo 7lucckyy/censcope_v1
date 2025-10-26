@@ -5,7 +5,7 @@ import logo from "public/LOGOJ3.png";
 
 console.log(logo);
 export const siteUrl = process.env.VERCEL_URL
-  ? process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
 export const ogImage = logo.src;
 
