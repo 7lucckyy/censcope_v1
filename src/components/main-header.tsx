@@ -18,10 +18,8 @@ export default function Header() {
   const [open, setOpen] = React.useState(false);
   const [isOpaque, setIsOpaque] = React.useState(false);
 
-  // 🧠 Handle scroll listener
   useEffect(() => {
     const handleScroll = () => {
-      // When the scroll position passes 100vh, set to true
       const scrollY = window.scrollY;
       const viewportHeight = window.innerHeight;
       setIsOpaque(pathname.startsWith("/news/") ? scrollY > 112 : scrollY > viewportHeight);
@@ -30,7 +28,7 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll);
     handleScroll(); // initialize on mount
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [pathname]);
   const Hamburger = open ? X : Menu;
 
   return (

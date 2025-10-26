@@ -212,11 +212,11 @@ function TiptapEditor({
           <FormField
             control={form.control}
             name="coverImage"
-            render={() => (
+            render={({ field }) => (
               <FormItem className="">
                 <FormLabel>Cover Image</FormLabel>
                 <FormControl>
-                  <CoverImageField form={form} />
+                  <CoverImageField onChange={(val: string) => field.onChange(val)} />
                 </FormControl>
                 <FormDescription>
                   This would be displayed on the news item card.

@@ -99,11 +99,12 @@ async function Page(props: { searchParams: SearchParams }) {
           {finalPosts.map((post) => (
             <NewsCard
               key={post.slug}
-              title={post.title}
+              postTitle={post.title}
               slug={post.slug}
               tags={post.tags}
               coverImage={post.coverImage}
               updatedAt={post.updatedAt}
+              className="w-[320px]"
             />
           ))}
         </div>

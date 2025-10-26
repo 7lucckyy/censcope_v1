@@ -5,14 +5,10 @@ import { AlertTriangle, Loader2, RefreshCcw, Upload } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { SelectImage } from "@/db/schema";
-import { UseFormReturn } from "react-hook-form";
 
-export function CoverImageField({ form }: {
-    form: UseFormReturn<{
-        title: string;
-        coverImage: string;
-        tags?: string[] | undefined;
-    }, unknown, undefined>
+
+export function CoverImageField({ onChange }: {
+    onChange: (val: string) => void
 }) {
     const [open, setOpen] = useState(false);
     const [fileName, setFileName] = useState<string>("")
@@ -82,7 +78,7 @@ export function CoverImageField({ form }: {
                                 key={image.id}
                                 onClick={() => {
                                     // ✅ Set the form field value here
-                                    form.setValue("coverImage", image.url);
+                                    onChange(image.url);
                                     setFileName(image.url.split("/").pop() || "Selected image");
                                     setOpen(false);
                                 }}

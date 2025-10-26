@@ -50,15 +50,16 @@ export default function Newline({ posts }: { posts: CombinedPostArray }) {
                 </div>
             </div>
             <div className="overflow-hidden" ref={emblaRef}>
-                <article className="w-full grow-0 flex flex-wrap justify-start gap-x-4 gap-y-6 snap-x snap-mandatory hide-scrollbar">
+                <article className="w-full flex justify-start gap-x-4 gap-y-6 snap-x snap-mandatory hide-scrollbar">
                     {posts.map((post, id) => (
                         <NewsCard
                             key={id}
                             coverImage={post.coverImage}
                             slug={post.slug}
-                            title={post.title}
+                            postTitle={post.title}
                             updatedAt={post.updatedAt}
                             tags={post.tags}
+                            className="flex-[0_0_80%] sm:flex-[0_0_45%] md:flex-[0_0_30%] lg:flex-[0_0_320px]"
                         />
                     ))}
                 </article>
