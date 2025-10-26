@@ -3,7 +3,6 @@ import Link from "next/link";
 import { FaArrowRight } from "react-icons/fa";
 import { format } from "date-fns";
 
-import { getFirstImageSrc } from "@/lib/utils";
 import { ImageIcon } from "lucide-react";
 
 export function NewsCard({
@@ -11,26 +10,25 @@ export function NewsCard({
   tags,
   updatedAt,
   slug,
-  content,
+  coverImage
 }: CombinedPost) {
-  console.log(content);
   return (
     <Link
-      href={`/our-newsline/${slug}`}
-      className="aspect-[3/4] w-80 group gap-2 bg-slate-400 flex flex-none flex-col items-start justify-between p-4 xl:p-6 snap-center lg:snap-start relative overflow-hidden"
+      href={`/news/${slug}`}
+      className="aspect-[3/4] w-[320px] group gap-2 bg-gray-300 flex flex-none flex-col items-start justify-between p-4 xl:p-6 snap-center lg:snap-start relative overflow-hidden mx-[15px]first:ml-0last:mr-0"
     >
-      {getFirstImageSrc(content) === null ? (
-        <div className="absolute top-0 left-0 flex justify-center items-center h-full w-full">
-          <ImageIcon className="size-6 lg:size-10" />
-        </div>
-      ) : (
+      {coverImage ? (
         <img
           alt=""
           width={1000}
           height={1000}
-          src={getFirstImageSrc(content)!}
+          src={coverImage}
           className="absolute top-0 left-0 w-full h-full object-cover brightness-50 scale-125 rotate-6 transition-all duration-500 group-hover:scale-100 group-hover:rotate-0"
         />
+      ) : (
+        <div className="absolute top-0 left-0 flex justify-center items-center h-full w-full">
+          <ImageIcon className="size-6 lg:size-10 text-gray-500" />
+        </div>
       )}
       <span className="px-4 z-10 py-1 capitalize  text-white bg-teal-700">
         news
@@ -67,7 +65,7 @@ export function NewsCard({
       </div>
 
       <button className="w-full flex items-center justify-between overflow-hidden text-white -mt-4 group-hover:mt-0 transition-all">
-        <span className="font-anton text-xs translate-y-4 group-hover:translate-y-0 transition-all">
+        <span className="text-xs translate-y-4 group-hover:translate-y-0 transition-all">
           {format(updatedAt, "LLLL dd, yyyy")}
         </span>
         <FaArrowRight className="text-transparent group-hover:text-white transition-all" />

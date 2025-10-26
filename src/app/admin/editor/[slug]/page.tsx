@@ -37,18 +37,6 @@ const getData = cache(async (slug: string) => {
     },
   });
 
-  // const result = await db
-  //   .select({
-  //     id: posts.id,
-  //     title: posts.title,
-  //     slug: posts.slug,
-  //     content: posts.content,
-  //     tags: postsToTags.tagId,
-  //   })
-  //   .from(posts)
-  //   .leftJoin(postsToTags, eq(posts.id, postsToTags.postId))
-  //   .where(eq(posts.id, slug));
-
   const tags = await db.select().from(tagsTable);
 
   return { post: postsWithTags, tags };

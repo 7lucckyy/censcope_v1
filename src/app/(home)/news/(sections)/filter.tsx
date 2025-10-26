@@ -1,7 +1,7 @@
 "use client";
 
 import { useDebouncedCallback } from "use-debounce";
-import { parseAsString, parseAsStringEnum,useQueryState, useQueryStates } from "nuqs";
+import { parseAsString, parseAsStringEnum, useQueryState, useQueryStates } from "nuqs";
 
 import { SelectTag } from "@/db/schema";
 import { authorIdParser, qParser } from "@/lib/parsers";
@@ -38,8 +38,8 @@ export function Filter({ count, tags, authors }: FilterProps) {
   const [sort, setSort] = useQueryState(
     "sort",
     parseAsStringEnum<SortOrder>(Object.values(SortOrder)).withDefault(
-        SortOrder.desc
-      ).withOptions({
+      SortOrder.desc
+    ).withOptions({
       history: "replace",
       shallow: false,
     }),
@@ -54,7 +54,7 @@ export function Filter({ count, tags, authors }: FilterProps) {
   return (
     <div className="w-full flex flex-col gap-4 bg-white py-10 px-5% lg:px-15%">
       <div className="w-full p-6 px-5% rounded-md bg-cyan-600/10 flex gap-2 flex-col items-center">
-        <h3 className="text-lg font-titillium">Refine your search:</h3>
+        <h3 className="text-lg ">Refine your search:</h3>
 
         <div className="w-full grid grid-cols-fit-16 gap-6">
           <div>
@@ -120,18 +120,18 @@ export function Filter({ count, tags, authors }: FilterProps) {
             </select>
           </div>
           {(filtersQ.tagId || !!filtersQ.authorId || !!filtersQ.q) &&
-          <div className="flex items-end h-full justify-end">
-            <button
-              type="button"
-              className="font-medium text-gray-700 inline-flex gap-2 items-center"
-              onClick={() =>
-                setFilters({ q: null, tagId: null, authorId: null })
-              }
-            >
-              <X className="mr-2 h-4 w-4" />
-              Clear Filters
-            </button>
-          </div>
+            <div className="flex items-end h-full justify-end">
+              <button
+                type="button"
+                className="font-medium text-gray-700 inline-flex gap-2 items-center"
+                onClick={() =>
+                  setFilters({ q: null, tagId: null, authorId: null })
+                }
+              >
+                <X className="mr-2 h-4 w-4" />
+                Clear Filters
+              </button>
+            </div>
           }
         </div>
       </div>

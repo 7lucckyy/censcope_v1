@@ -54,9 +54,9 @@ export const ImagePlaceholder = Node.create<ImagePlaceholderOptions>({
   addOptions() {
     return {
       HTMLAttributes: {},
-      onDrop: () => {},
-      onDropRejected: () => {},
-      onEmbed: () => {},
+      onDrop: () => { },
+      onDropRejected: () => { },
+      onEmbed: () => { },
     };
   },
 
@@ -106,7 +106,6 @@ function ImagePlaceholderComponent(props: NodeViewProps) {
           throw new Error("Failed to fetch images");
         }
         const data = await response.json();
-        console.log(data);
         setImages(data);
       } catch (err) {
         setError(

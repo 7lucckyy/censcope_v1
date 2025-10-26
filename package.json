@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:gen": "drizzle-kit generate",
+    "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "npx tsx src/db/seed.ts",
     "prebuild": "npm run db:seed"

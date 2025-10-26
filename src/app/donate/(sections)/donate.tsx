@@ -50,21 +50,21 @@ export default function Donate() {
       <div className="w-full gap-0 lg:gap-6 grid items-start grid-cols-fit-20">
         <div className="flex flex-col bg-cyan-950/80 backdrop-blur shadow-sm lg:rounded-md overflow-hidden">
           <header className="w-full flex items-center justify-center p-4">
-            <h4 className="text-white text-lg capitalize font-titillium">
+            <h4 className="text-white text-lg capitalize ">
               my donation
             </h4>
           </header>
         </div>
         <div className="flex flex-col bg-cyan-950/80 backdrop-blur shadow-sm lg:rounded-md overflow-hidden">
           <header className="w-full flex items-center justify-center p-4">
-            <h4 className="text-white text-lg capitalize font-titillium">
+            <h4 className="text-white text-lg capitalize ">
               my details
             </h4>
           </header>
         </div>
         <div className="flex flex-col bg-cyan-950/80 backdrop-blur shadow-sm lg:rounded-md overflow-hidden">
           <header className="w-full flex items-center justify-center p-4">
-            <h4 className="text-white text-lg capitalize font-titillium">
+            <h4 className="text-white text-lg capitalize ">
               my payment
             </h4>
           </header>

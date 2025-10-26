@@ -1,7 +1,10 @@
 import { Hero } from "@/components/hero";
 
 import OurAction from "src/assets/images/our-action.jpg";
-import Actions from "../(index)/(sections)/actions";
+import { Actions } from "../(index)/(sections)/actions";
+import { actionsMetadata } from "@/config/metadata";
+
+export const metadata = actionsMetadata;
 
 export default function Page() {
   return (
@@ -10,8 +13,7 @@ export default function Page() {
         title="Our actions"
         image={OurAction.src}
         links={[{ label: "about us", href: "#" }]}
-        description={`Our 199 projects are carried out in 25 countries by 3,007 national employees, 219 expatriates and 139 head office staff.
-          Having become Première Urgence Internationale in 2011, the organization is now active in 25 countries in Africa, Asia, Europe, Latin America, and the Middle East, engaging in direct aid for populations suffering crises.`}
+        description="We deliver holistic humanitarian support that includes medical care, psychosocial assistance, livelihood empowerment, and inclusive education. By engaging local leaders, volunteers, and stakeholders, we foster community-driven solutions that promote safety, resilience, and social cohesion"
       />
 
       <Actions />

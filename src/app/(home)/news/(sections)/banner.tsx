@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { socialLinks } from "@/constants/data";
-import OurNewslineImage from "../../../../assets/images/our-newline.jpg";
+import OurNewslineImage from "@/assets/images/our-newline.jpg";
 
 export default function Banner() {
   return (
-    <section className="flex flex-col gap-20 items-center justify-center bg-gray-200 pt-20 pb-10 px-5% lg:px-20% bg-cover bg-top overflow-hidden lg:h-screen lg:max-h-[720px]">
+    <section className="relative flex items-center justify-center bg-gray-200 pt-20 pb-10 px-5% lg:px-20% bg-cover bg-top overflow-hidden lg:h-screen lg:max-h-[720px]">
       <Image
         alt=""
         width={1920}

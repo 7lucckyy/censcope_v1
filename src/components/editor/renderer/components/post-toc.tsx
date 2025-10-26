@@ -29,10 +29,8 @@ export function PostToc() {
     }
   }, []);
 
-  if (!items.length) return null;
-
   return (
-    <details className="group/accordion flex flex-col my6 lg:max-h-[calc(100vh-4rem)] gap-2 lg:sticky lg:top-8 lg:my-0 lg:gap-8 2xl:col-span-3 lg:col-span-2 col-span-full">
+    <details className="group/accordion flex flex-col my6 lg:max-h-[calc(100vh-4rem)] gap-2 lg:sticky lg:top-8 lg:my-0 lg:gap-4 2xl:col-span-3 lg:col-span-2 col-span-full">
       <summary className="bg-light-blur rounded-xl border cursor-pointer list-none !marker:content-none">
         <span className="flex w-full items-center gap-2 p-4">
           <svg
@@ -52,9 +50,9 @@ export function PostToc() {
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               className="size-5 transition-transform"
               viewBox="0 0 24 24"
             >
@@ -63,31 +61,36 @@ export function PostToc() {
           </span>
         </span>
       </summary>
-      <ul className="flex flex-col gap-0 h-0group-open/accordion:h-auto transition-[max-height]duration-300delay-100ease-in-out">
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className="list-inside my-0 py-0"
-            style={
-              {
-                // paddingLeft: `${(item.level - 1) * 1}rem`,
-              }
-            }
-          >
-            <Link
-              href={`#${item.id}`}
-              onClick={scrollToHeading(item.id)}
-              className={cn(
-                "transition-colors py-2 font-titillium uppercase text-sm border-s-[0.375rem] first-of-type:pt-0 last-of-type:pb-0 ps-4",
-                activeId === item.id
-                  ? "!text-dark !border-dark"
-                  : "text-dark/30 border-dark/10"
-              )}
-            >
-              {item.text}
-            </Link>
-          </li>
-        ))}
+      <ul className="flex flex-col justify-start gap-0 h-0group-open/accordion:h-auto transition-[max-height]duration-300delay-100ease-in-out">
+        {!items.length ?
+          (<div className="text-start py-2 text-dark/50 text-sm lg:text-base italic">
+            No items in the table of contents yet.
+          </div>
+          ) : (
+            items.map((item) => (
+              <li
+                key={item.id}
+                className="list-inside my-0 py-0"
+                style={
+                  {
+                    // paddingLeft: `${(item.level - 1) * 1}rem`,
+                  }
+                }
+              >
+                <Link
+                  href={`#${item.id}`}
+                  onClick={scrollToHeading(item.id)}
+                  className={cn(
+                    "transition-colors py-2 uppercase text-sm border-s-[0.375rem] first-of-type:pt-0 last-of-type:pb-0 ps-4",
+                    activeId === item.id
+                      ? "!text-dark !border-dark"
+                      : "text-dark/30 border-dark/10"
+                  )}
+                >
+                  {item.text}
+                </Link>
+              </li>
+            )))}
       </ul>
     </details>
   );

@@ -1,18 +1,17 @@
 import Image from "next/image";
 
-import { spiralImg } from "@/constants/media";
-import WhoWeAreImage from "src/assets/images/who-we-are.jpg";
+import WhoWeAreImage from "@/assets/images/who-we-are.jpg";
 
 export function WhoWeAre() {
   return (
     <section
       id="who-we-are"
-      className="flex flex-col md:flex-row gap-6 lg:gap-10 padding-horizontal padding-vertical !pb-0"
+      className="flex flex-col md:flex-row md:items-center gap-6 lg:gap-10 padding-horizontal padding-vertical !pb-0"
     >
       <div className="w-full flex flex-col items-start gap-6">
-        <h3 className="text-xl lg:text-4xl">Who we are?</h3>
+        <h2 className="">Who we are?</h2>
 
-        <p className="lg:text-lg font-titillium">
+        <p className="lg:text-lg ">
           CENSCOPE is a nationally registered non-governmental organization
           (NGO) recognized by the Corporate Affairs Commission (CAC) and
           actively operating in the regions of Borno, Adamawa, and Yobe states.
@@ -25,15 +24,7 @@ export function WhoWeAre() {
         </p>
       </div>
 
-      <div className="w-full py-6 lg:py-0 px-4% lg:px-0 flex relative items-center justify-center">
-        <Image
-          alt=""
-          width={1920}
-          height={900}
-          src={spiralImg}
-          className="top-0 left-0 absolute w-full h-full object-cover opacity-10"
-        />
-
+      <div className="w-full">
         <Image
           alt=""
           width={1000}

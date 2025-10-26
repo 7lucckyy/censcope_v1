@@ -1,12 +1,12 @@
 import { socialLinks } from "@/constants/data";
 
-export default function SocialMedia() {
+export function SocialMedia() {
   return (
     <section
       id="social-media"
-      className="py-24 md:px-20% bg-spiral bg-gray-100 bg-contain bg-center"
+      className="py-10 sm:py-12 lg:16 xl:py-20 bg-spiral bg-white bg-contain bg-center"
     >
-      <div className="p-10 flex flex-col items-center bg-white">
+      <div className="p-10 flex flex-col items-center bg-gray-100 max-w-2xl mx-auto w-full">
         <p className="italic text-3xl first-letter:capitalize font-cavet">
           follow us{" "}
         </p>

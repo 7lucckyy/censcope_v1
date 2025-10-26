@@ -31,6 +31,7 @@ export const posts = pgTable("post", {
   title: text("title").notNull(),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   content: text("content"),
+  coverImage: varchar("coverImage", { length: 256 }),
   published: boolean("published").default(false).notNull(),
   authorId: varchar("author_id", { length: 255 }).references(() => users.id, {
     onDelete: "set null",

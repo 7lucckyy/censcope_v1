@@ -33,6 +33,7 @@ import { TagInput } from "./tag-input";
 import { SelectTag } from "@/db/schema";
 import { extensionKit } from "./kit";
 import ToolbarBlock from "./toolbars";
+import { CoverImageField } from "./cover-image-field";
 
 const FormSchema = z.object({
   tags: z
@@ -44,6 +45,7 @@ const FormSchema = z.object({
   title: z.string({
     required_error: "Please provide a title.",
   }),
+  coverImage: z.string({ required_error: "Please provide a cover image." }),
 });
 
 interface PostAttributes {
@@ -110,6 +112,8 @@ function TiptapEditor({
     const formdata = new FormData();
     // If title is different from current, this is to prevent unique_constraint when deriving slug due to same title
     if (values.title !== title) formdata.set("title", values.title);
+    if (values.coverImage) formdata.set("coverImage", values.coverImage);
+
     if (values.tags)
       values.tags.forEach((tag) => {
         formdata.append("tags", tag);
@@ -182,28 +186,47 @@ function TiptapEditor({
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem className="max-w-80">
-              <FormLabel>Blog Post Tags</FormLabel>
-              <FormControl>
-                <TagInput
-                  availableTags={allTags}
-                  onChange={field.onChange}
-                  placeholder="Add or create tags..."
-                  initialSelectedTags={tags.map((t) => t.tag)}
-                  maxTags={5}
-                />
-              </FormControl>
-              <FormDescription>
-                This helps you find your post later.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className="flex gap-4">
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem className="max-w-80">
+                <FormLabel>Blog Post Tags</FormLabel>
+                <FormControl>
+                  <TagInput
+                    availableTags={allTags}
+                    onChange={field.onChange}
+                    placeholder="Add or create tags..."
+                    initialSelectedTags={tags.map((t) => t.tag)}
+                    maxTags={5}
+                  />
+                </FormControl>
+                <FormDescription>
+                  This helps group your post.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="coverImage"
+            render={() => (
+              <FormItem className="">
+                <FormLabel>Cover Image</FormLabel>
+                <FormControl>
+                  <CoverImageField form={form} />
+                </FormControl>
+                <FormDescription>
+                  This would be displayed on the news item card.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+        </div>
 
         <div
           onClick={() => {

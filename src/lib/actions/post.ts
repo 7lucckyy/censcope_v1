@@ -56,7 +56,7 @@ export async function updatePost(formData: FormData) {
     const title = formData.get("title") as string;
     const content = formData.get("content") as string;
     const postId = formData.get("postId") as string;
-
+    const coverImage = formData.get("coverImage") as string;
     const tagsFormDataValue = formData.getAll("tags");
 
     // Convert FormDataEntryValue[] to string[] (important type check)
@@ -79,8 +79,7 @@ export async function updatePost(formData: FormData) {
 
       // 1. Create or Update the Post
       if (currentPostId) {
-        const dataToUpdate: Partial<InsertPost> = { content };
-        console.log(title);
+        const dataToUpdate: Partial<InsertPost> = { content, coverImage };
         if (typeof title === "string") {
           dataToUpdate.title = title;
           dataToUpdate.slug = slugify(title);
@@ -99,6 +98,7 @@ export async function updatePost(formData: FormData) {
           .values({
             title,
             content,
+            coverImage,
             slug: slugify(title),
             authorId: session.user!.id,
           })

@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { FaArrowRight } from "react-icons/fa";
 
-import { spiralImg } from "@/constants/media";
+import spiralImg from "@/assets/images/spiral-pattern.jpg";
 
 export function OurImpact() {
   const infos = [
@@ -104,7 +103,7 @@ export function OurImpact() {
           ))}
         </div>
 
-        <div className="flex-none w-full flex items-center justify-center lg:hidden">
+        {/* <div className="flex-none w-full flex items-center justify-center lg:hidden">
           <button className="flex items-center gap-2 relative group border border-black hover:border-red-600 transition-all">
             <span className="absolute top-0 left-0 w-0 h-full duration-300 bg-red-600 transition-all group-hover:w-full" />
             <span className="flex items-center  px-6 py-3 font-bold gap-2 z-10 group-hover:text-white transition-all">
@@ -112,7 +111,7 @@ export function OurImpact() {
               <FaArrowRight className="transition-all" />
             </span>
           </button>
-        </div>
+        </div> */}
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
-import "./global.css";
 import type { Metadata } from "next";
-import PortalProvider from "@/components/providers/portal.provider";
+
+import "./global.css";
 
 export const metadata: Metadata = {
   title: "Censcope",
@@ -11,12 +11,7 @@ export const metadata: Metadata = {
 export default function Layout(properties: React.PropsWithChildren) {
   return (
     <html lang="en">
-      <body>
-        <PortalProvider>
-          <div id="portal"></div>
-          <div id="root">{properties.children}</div>
-        </PortalProvider>
-      </body>
+      <body>{properties.children}</body>
     </html>
   );
 }

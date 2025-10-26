@@ -12,8 +12,53 @@ import TiptapRenderer from "@/components/editor/renderer";
 import { PostToc } from "@/components/editor/renderer/components/post-toc";
 import { SharePostButton } from "@/components/post/share-post";
 import { CopyLinkButton } from "@/components/post/copy-link";
+import { Metadata } from "next";
+import { siteUrl } from "@/config/metadata";
 
-async function OurNewslineItemPage({
+
+// ✅ Dynamic Metadata Generator
+export async function generateMetadata(
+  { params }: { params: Promise<{ slug: string }> }
+): Promise<Metadata> {
+  const slug = (await params).slug;
+  // Fetch the news article
+  const article = await db.query.posts.findFirst({
+    where: eq(posts.slug, slug),
+  });
+
+  // Fallback if not found
+  if (!article) {
+    return {
+      title: "News | CENSCOPE",
+      description: "Latest news and updates from CENSCOPE’s humanitarian and inclusion efforts.",
+      openGraph: {
+        title: "CENSCOPE News & Impact Stories",
+        description:
+          "Stay informed on CENSCOPE’s latest achievements, advocacy efforts, and community resilience projects.",
+        url: `${siteUrl}/news`,
+        siteName: "CENSCOPE",
+        type: "article",
+        images: [`${siteUrl}/LOGOJ3.png`],
+      },
+    };
+  }
+
+  // ✅ Use database fields dynamically
+  return {
+    title: `${article.title} | CENSCOPE`,
+    description: "Read more about CENSCOPE’s latest impact and humanitarian activities.",
+    openGraph: {
+      title: article.title,
+      description: "Discover CENSCOPE’s latest news, advocacy stories, and community updates.",
+      url: `${siteUrl}/news/${slug}`,
+      siteName: "CENSCOPE",
+      type: "article",
+      images: [article.coverImage || `${siteUrl}/LOGOJ3.png`],
+    },
+  };
+}
+
+async function NewsItemPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
@@ -53,12 +98,12 @@ async function OurNewslineItemPage({
 
   return (
     <main>
-      <div className="bg-[url('/noise-light.svg')] mt-28 relative">
+      <div className="bg-[url('/noise-light.svg')] pt-28 relative">
         <article className="max-w-content mx-auto grid grid-cols-4 gap-y-10 gap-x-4 px-4 lg:grid-cols-10 2xl:grid-cols-12 items-start py-20">
           <div className="lg:hidden col-span-full max-lg:order-1">
             <Link
               className="flex items-center gap-1 font-mono text-xs uppercase leading-none"
-              href="/our-newsline"
+              href="/news"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -76,11 +121,11 @@ async function OurNewslineItemPage({
             </Link>
           </div>
           <PostToc />
-          <div className="max-lg:order-3 flex flex-col gap-12 rounded-2xl border bg-white p-8 2xl:col-start-4 2xl:col-span-6 lg:col-start-3 lg:col-span-6 col-span-full">
-            <header className="flex flex-col gap-6">
+          <div className="max-lg:order-3 min-h-screen flex flex-col gap-12 rounded-xl border bg-white/80 p-8 2xl:col-start-4 2xl:col-span-6 lg:col-start-3 lg:col-span-7 col-span-full">
+            <div className="flex flex-col gap-5">
               <Link
                 className="lg:flex hidden items-center gap-1 font-mono text-xs uppercase leading-none"
-                href="/our-newsline"
+                href="/news"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -96,18 +141,18 @@ async function OurNewslineItemPage({
                 </svg>
                 All articles
               </Link>
-              <div className="text-dark/50 text-sm font-cavet flex w-fit justify-between gap-5 font-bold uppercase">
+              <div className="text-dark/50 text-sm flex w-fit justify-between gap-5 font-bold uppercase">
                 <p>{format(post.date, "LLL dd yyy")}</p>
                 <p className="border-l"></p>
                 <p>{humanizedDuration} read</p>
               </div>
 
-              <h1 className="uppercase !leading-none text-[42px] md:text-6xl">
+              <h1 className="capitalize !leading-none text-4xl md:text-5xl tracking-tighter">
                 {post.title}
               </h1>
-            </header>
+            </div>
             <div
-              className="prose max-w-full flex flex-col gap-6 *:font-inter"
+              className="prose max-w-full flex flex-col gap-4 prose-a:text-cyan-600 prose-img:rounded-lg prose-img:shadow-md dark:prose-invert lg:prose-lg xl:prose-xl"
               id="article-content"
             >
               <TiptapRenderer>{String(post.content)}</TiptapRenderer>
@@ -116,7 +161,7 @@ async function OurNewslineItemPage({
           {/* <div className="my-16 lg:hidden col-span-full">
             <hr />
           </div> */}
-          <aside className="max-lg:order-2 flex flex-col lg:sticky top-8 lg:max-h-[calc(100vh-4rem)] gap-8 overflow-y-auto 2xl:col-start-10 2xl:col-span-3 lg:col-start-9 lg:col-span-2 col-span-full">
+          <aside className="max-lg:order-2 flex flex-col lg:sticky top-8 lg:max-h-[calc(100vh-4rem)] gap-8 overflow-y-auto 2xl:col-start-10 2xl:col-span-2 lg:col-start-10 lg:col-span-2 col-span-full">
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-3 lg:order-1">
                 <div className="text-xs font-inter uppercase">/Author</div>
@@ -141,14 +186,14 @@ async function OurNewslineItemPage({
                   </div>
                 </div>
               </div>
-              <div className="flex flex-col gap-3 lg:order-3">
+              <div className="flex flex-col items-start gap-3 lg:order-3">
                 <div className="text-xs font-inter uppercase">/Share</div>
-                <ul className="flex items-center gap-4">
+                <ul className="flex flex-col items-center gap-4">
                   <li>
                     <SharePostButton
                       text={post.title}
                       platform="twitter"
-                      className="flex flex-col bg-light-blur size-10 items-center justify-center rounded-lg border lg:order-4"
+                      className="flex flex-col bg-light-blur size-10 items-center justify-center rounded-lg border lg:order-4 hover:shadow-md hover:bg-gray-100"
                     >
                       <div className="sr-only">Share on Twitter</div>
                       <svg
@@ -168,7 +213,7 @@ async function OurNewslineItemPage({
                     <SharePostButton
                       text={post.title}
                       platform="facebook"
-                      className="flex flex-col bg-light-blur size-10 items-center justify-center rounded-lg border lg:order-4"
+                      className="flex flex-col bg-light-blur size-10 items-center justify-center rounded-lg border lg:order-4 hover:shadow-md hover:bg-gray-100"
                     >
                       <div className="sr-only">Share on Facebook</div>
                       <svg
@@ -188,7 +233,7 @@ async function OurNewslineItemPage({
                     <SharePostButton
                       text={post.title}
                       platform="linkedin"
-                      className="flex flex-col bg-light-blur size-10 items-center justify-center rounded-lg border lg:order-4"
+                      className="flex flex-col bg-light-blur size-10 items-center justify-center rounded-lg border lg:order-4 hover:shadow-md hover:bg-gray-100"
                     >
                       <div className="sr-only">Share on LinkedIn</div>
                       <svg
@@ -219,4 +264,4 @@ async function OurNewslineItemPage({
   );
 }
 
-export default OurNewslineItemPage;
+export default NewsItemPage;

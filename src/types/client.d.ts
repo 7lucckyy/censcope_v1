@@ -33,15 +33,11 @@ interface ButtonProps {
 
 interface SupportCardProps {
   index: number;
-  delay: number;
-  visible: boolean;
   support: SupportType;
 }
 
 interface DiscoverCardProps {
   index: number;
-  delay: number;
-  visible: boolean;
   discover: DiscoverType;
 }
 
@@ -51,7 +47,7 @@ interface ScrollableType {
 
 type CombinedPost = Pick<
   SelectPost,
-  "title" | "slug" | "content" | "updatedAt"
+  "title" | "slug" | "updatedAt" | "coverImage"
 > & { tags: SelectTag[] };
 
 type CombinedPostArray = CombinedPost[];

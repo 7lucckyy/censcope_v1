@@ -57,10 +57,8 @@ export default {
         "50%": "50%",
       },
       fontFamily: {
-        cavet: ["Cavet", "cursive"],
-        anton: ["Anton", "sans-serif"],
-        titillium: ["TitilliumWeb", "sans-serif"],
-        inter: ["var(--font-sans)", "sans-serif"],
+        josefin: ["JosefinSans", "sans"],
+        manrope: ["Manrope", "sans"],
       },
       gridTemplateColumns: {
         "fit-8": "repeat(auto-fit, minmax(8em, 1fr))",

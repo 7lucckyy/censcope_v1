@@ -1,15 +1,9 @@
-"use client";
-import useObserver from "@/hooks/observer.hook";
 import Image from "next/image";
-import { spiralImg } from "@/constants/media";
 import Photo from "@/assets/images/WhatsApp Image 2025-07-30 at 16.24.05.jpeg";
 
-export default function Actions() {
-  const { ref } = useObserver();
-
+export function Actions() {
   return (
     <section
-      ref={ref}
       id="actions"
       className="flex flex-col padding-horizontal padding-vertical"
     >
@@ -24,37 +18,29 @@ export default function Actions() {
         </p>
       </header>
 
-      <div className="flex flex-col md:flex-row gap-6 lg:gap-10 mt-10 lg:mt-16">
+      <div className="flex flex-col md:flex-row md:items-center gap-6 lg:gap-10 mt-10 lg:mt-16">
         <div className="w-full flex flex-col items-start gap-6">
-          <p className="text-sm lg:text-base font-titillium">
+          <p className="text-sm lg:text-base ">
             We deliver holistic humanitarian support that includes medical care,
             psychosocial assistance, livelihood empowerment, and inclusive
             education. By engaging local leaders, volunteers, and stakeholders,
             we foster community-driven solutions that promote safety,
             resilience, and social cohesion.
           </p>
-          <p className="text-sm lg:text-base font-titillium">
+          <p className="text-sm lg:text-base ">
             Through targeted interventions such as Explosive Ordnance Risk
             Education, socio-economic reintegration, disaster response, and
             advocacy for disability inclusion, we address immediate needs while
             building sustainable pathways to peace and empowerment.
           </p>
-          <p className="text-sm lg:text-base font-titillium">
+          <p className="text-sm lg:text-base ">
             Our partnerships with government agencies, NGOs, and media amplify
             our reach and impact, ensuring that every person we serve is heard,
             protected, and equipped to thrive.
           </p>
         </div>
 
-        <div className="w-full py-6 lg:py-0 px-4% lg:px-0 flex relative items-center justify-center">
-          <Image
-            alt=""
-            width={1000}
-            height={1000}
-            src={spiralImg.src}
-            className="top-0 left-0 absolute w-full h-full object-cover opacity-10"
-          />
-
+        <div className="w-full flex items-center justify-center">
           <Image
             alt=""
             width={1000}
